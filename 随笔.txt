@@ -1,0 +1,68 @@
+map:
+有set get delete方法 for( let entry of map) 每次遍历会返回一个键值对数组[key,value];对于key的比较是用的全等于===,保存的value只是引用并没有做拷贝处理
+大多数情况下我们会用object作为map使用但是object会有原型 但是es5可以使用object.create(null);
+object的key只能是字符串或者Symbols 但是map可以用任意值做键可以是对象
+对象.size可以获取到键值对的个数
+方法有
+对象.clear()移除所有的键值对,
+对象.delete()根据键移除键值对 并返回一个布尔值代表是否有该键
+对象.forEach(function(value,key){})给每个遍历到的回调函数赋值key和value 最好是用for of
+对象.has()判断key是否存在
+对象.keys()返回所有的key组成的iterator 然后利用展开运算符...可以转换成数组 [...a.keys()]
+对象.values()同上
+可以使用...iterator对象展开迭代器对象 如果是键值对类型的就会变成二维数组 如果是数组类型的就会变成一维数组
+同样二维数组也可以放入map的构造器中var kvArray = [["key1", "value1"], ["key2", "value2"]];var myMap = new Map(kvArray);
+---------------------------------------------------------------------
+NaN需要用isNaN来判断 因为NaN不等于NaN代表一个非数字
+---------------------------------------------------------------------
+数字类型函数需要记住的函数 
+parseFloat()将字符串解析成浮点型小数 注意 如果字符串解析默认是整数或者1.00这种 会默认解析成整数 只有1.01有效浮点型字符串才会被解析成浮点型
+parseInt()则将字符串解析成整数 注意 无视字符串的小数部分
+Number.isInteger()判断数字是否为整数
+Number.prototype.toFixed(Number)把数字强制保留几位小数 注意返回的是字符串 而且是在数字类型的原型上的方法 意味着Number类型可以直接调用这个函数
+Number(10).toFixed(2)
+---------------------------------------------------------------------
+Math:
+Math.random()生成一个0-1的伪随机数
+Math.ceil(x)向上取整
+Math.floor(x)向下取整 返回一个小于x的最大整数
+Math.round()返回数字四舍五入后的整数结果
+----------------------------------------------------------------------
+Object:
+Object.assign(target,...source)从多个对象上复制内容到target上 注意是浅拷贝
+Object.create(原型,属性构造器)第二个参数是属性构造器 可选填 例如Object.create(null,{ p: { value: 42, writable: true, enumerable: true, configurable: true }})
+Object.freeze(对象);冻结该对象 浅冻结 即如果某个属性只是指向某个对象的内存地址值 即该对象还是可以改变的；
+Object.getOwnPrototypeNames(对象)获取对象的所有属性包括不可枚举的 也可以作用在原型上 即返回原型的所有属性
+Object.getPrototypeOf(对象)从对象上获取原型
+Object.keys()返回一个包含所有key的数组
+---------------------------------------------------------------------
+Promise:
+基本使用
+注意 一个promise只会调用resolve或者reject任意一个回调函数 即要么成功要么失败状态
+var pro=new Promise(function(resolve,reject){
+if(){
+resolve(someValue);
+}else{
+reject(value);
+}
+})
+pro.then(function(value){dosomething...}).catch(function(value){....})
+--------
+多个promise一起调用 注意 其中一个promise出现reject所有promise都会停止 
+Promise.all([...多个promise对象]).then(function(){
+
+}).catch(function(){
+
+})
+-------
+promise竞速 即只完成一个即可 当完成第一个resolve或者reject的时候promise停止
+Promise.race([...多个promise对象]).then(function(){
+
+}).catch(function(){
+
+})
+//注意 promise.then都是基于事件驱动的 所以都是异步的  编译器执行到异步代码的时候会插入列队 并不会执行 会等同步代码执行完毕后执行异步代码
+-------
+Promise.resolve(value) 会返回一个promise对象  promise对象.then(function..) 可以执行这个resolve 并且是异步执行
+reject同样可以 适用于一些同步编程中
+-------------------------------------------------------------------------
